@@ -1,16 +1,16 @@
 import QtQuick 2.0
 import LogicAnalyer 1.0
-import LogicSeries 1.0
+//import LogicSeries 1.0
 
 Rectangle {
     id: window
     width: 360
     height: 360
 
-    LogicSeries
-    {
-        id:series
-    }
+//    LogicSeries
+//    {
+//        id:series
+//    }
 
 
     Rectangle {
@@ -35,12 +35,14 @@ Rectangle {
 
 
     Column{
+        anchors.fill: parent
         spacing: 40
 
         LogicChannel{
             id: channel0
-            anchors.horizontalCenter: window.horizontalCenter
-            width: window.width
+            series: LogicSeries{}
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
             height: 60
 
             color: "maroon"
@@ -48,8 +50,9 @@ Rectangle {
 
         LogicChannel{
             id: channel1
-            anchors.horizontalCenter: window.horizontalCenter
-            width: window.width
+            series: LogicSeries{}
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
             height: 60
 
             color: "maroon"

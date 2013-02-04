@@ -9,13 +9,22 @@ class LogicSeries : public QObject
 public:
     LogicSeries(QObject *parent = 0);
 
+    bool level(void);
+    double* points(void);
+    quint32 count(void);
+
+    void setLevel(bool level);
+    void setPoints(double* points);
+    void setCount(quint32 count);
+
 signals:
+
 
 public slots:
 
 private:
     bool m_level;
-    quint64* m_points;
+    double* m_points;
     quint32 m_count;
 };
 

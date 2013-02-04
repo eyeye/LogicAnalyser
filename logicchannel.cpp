@@ -42,16 +42,17 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
     {
         node = static_cast<QSGGeometryNode *>(oldNode);
         geometry = node->geometry();
-        geometry->allocate(count);
+        geometry->allocate(2*(series()->count()));
     }
 
     QRectF rect = boundingRect();
     QSGGeometry::Point2D *points = geometry->vertexDataAsPoint2D();
 
 
-    for( int i = 0; i < (count/2); i++)
+    for( quint32 i = 0; i < (series()->count()); i++)
     {
-        float x = (rect.width() * i)/(count/2);
+        //float x = (rect.width() * i)/(series()->count());
+        float x  = series()->points()[i];
         float y0 = 5;
         float y1 = rect.height()-5;
 
@@ -73,6 +74,21 @@ void LogicChannel::setColor(const QColor &color)
     {
         m_color = color;
         emit colorChanged(color);
+        update();
+    }
+}
+
+LogicSeries *LogicChannel::series() const
+{
+    return m_series;
+}
+
+void LogicChannel::setSeries(LogicSeries *series)
+{
+    if(m_series != series)
+    {
+        m_series = series;
+        emit seriesChanged(series);
         update();
     }
 }
