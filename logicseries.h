@@ -6,8 +6,10 @@
 class LogicSeries : public QObject
 {
     Q_OBJECT
+    Q_PROPERTY(bool level READ level WRITE setLevel)
 public:
     LogicSeries(QObject *parent = 0);
+    ~LogicSeries(void);
 
     bool level(void);
     double* points(void);
@@ -26,6 +28,8 @@ private:
     bool m_level;
     double* m_points;
     quint32 m_count;
+
+    double m_pointsData[128];
 };
 
 #endif // LOGICSERIES_H

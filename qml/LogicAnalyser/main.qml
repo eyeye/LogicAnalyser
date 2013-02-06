@@ -36,11 +36,14 @@ Rectangle {
 
     Column{
         anchors.fill: parent
-        spacing: 40
+        spacing: 10
 
         LogicChannel{
             id: channel0
-            series: LogicSeries{}
+            series: LogicSeries{
+                level: true
+            }
+
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             height: 60
@@ -50,7 +53,54 @@ Rectangle {
 
         LogicChannel{
             id: channel1
-            series: LogicSeries{}
+            series: LogicSeries{
+                level: false
+            }
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: 60
+
+            color: "maroon"
+        }
+
+        LogicChannel{
+            series: LogicSeries{
+                level: true
+            }
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: 60
+
+            color: "maroon"
+        }
+        LogicChannel{
+            series: LogicSeries{
+                level: true
+            }
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: 60
+
+            color: "maroon"
+        }
+        LogicChannel{
+            series: LogicSeries{
+                level: true
+            }
+
+            anchors.horizontalCenter: parent.horizontalCenter
+            width: parent.width
+            height: 60
+
+            color: "maroon"
+        }
+        LogicChannel{
+            series: LogicSeries{
+                level: true
+            }
+
             anchors.horizontalCenter: parent.horizontalCenter
             width: parent.width
             height: 60

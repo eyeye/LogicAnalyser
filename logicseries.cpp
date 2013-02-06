@@ -1,15 +1,23 @@
 #include "logicseries.h"
 
 LogicSeries::LogicSeries(QObject *parent) :
-    QObject(parent), m_level(true), m_count(128)
+    QObject(parent), m_level(true), m_count(1024)
 {
+    qDebug("Series Init!");
     m_points = new double[m_count];
+    //m_points = m_pointsData;
+    quint32 sum = 0;
 
-    qDebug("初始化Series！");
     for(quint32 i = 0; i < m_count; i++)
     {
-        m_points[i] = i;
+        sum += i;
+        m_points[i] = 2*i;
     }
+}
+
+LogicSeries::~LogicSeries()
+{
+    delete m_points;
 }
 
 bool LogicSeries::level()

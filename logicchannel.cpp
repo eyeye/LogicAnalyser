@@ -4,7 +4,7 @@
 
 
 LogicChannel::LogicChannel(QQuickItem *parent) :
-    QQuickItem(parent), m_color("red")
+    QQuickItem(parent), m_color("red"), m_series(NULL)
 {
     //m_color = QColor("red");
     setFlag(ItemHasContents, true);
@@ -19,21 +19,26 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
     QSGGeometryNode *node = 0;
     QSGGeometry     *geometry = 0;
 
-    const int count = 128;
+    if(m_series == NULL)
+    {
+        return NULL;
+    }
+
+    qDebug() <<"m_series->count: "<< m_series->count();
 
     if(oldNode == NULL)
     {
         node = new QSGGeometryNode;
-        geometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(), count);
+        geometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(),
+                                   2*(m_series->count()) + 2);
 
-        geometry->setDrawingMode(GL_LINES);
-        geometry->setLineWidth(2);
+        geometry->setDrawingMode(GL_LINE_STRIP);
+        geometry->setLineWidth(4);
 
         node->setGeometry(geometry);
         node->setFlag(QSGNode::OwnsGeometry);
 
         QSGFlatColorMaterial *material = new QSGFlatColorMaterial;
-        //material->setColor(m_color);
         material->setColor(m_color);
         node->setMaterial(material);
         node->setFlag(QSGNode::OwnsMaterial);
@@ -42,24 +47,77 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
     {
         node = static_cast<QSGGeometryNode *>(oldNode);
         geometry = node->geometry();
-        geometry->allocate(2*(series()->count()));
+        geometry->allocate(2*(m_series->count()) + 2);
     }
 
     QRectF rect = boundingRect();
     QSGGeometry::Point2D *points = geometry->vertexDataAsPoint2D();
+    qDebug() <<"index_count: "<< geometry->indexCount();
 
 
-    for( quint32 i = 0; i < (series()->count()); i++)
+    int index = 0;
+    quint32 i = 0;
+    float x;
+
+    if(m_series->level())
     {
-        //float x = (rect.width() * i)/(series()->count());
-        float x  = series()->points()[i];
-        float y0 = 5;
-        float y1 = rect.height()-5;
+        // start
+        points[index++].set(rect.x(), rect.y()+5);    // HIGH
 
-        points[2*i + 0].set(rect.x()+x, rect.y()+y0);
-        points[2*i + 1].set(rect.x()+x, rect.y()+y1);
+        while( true )
+        {
+            // fall
+            x  = m_series->points()[i];
+            points[index++].set(rect.x()+x, rect.y()+5);
+            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
+            if( ++i == m_series->count() )
+            {
+                points[index++].set(rect.x()+rect.width(), rect.y()+rect.height()-5);    // LOW
+                break;
+            }
+
+            // rise
+            x  = m_series->points()[i];
+            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
+            points[index++].set(rect.x()+x, rect.y()+5);
+            if( ++i == m_series->count() )
+            {
+                points[index++].set(rect.x()+rect.width(), rect.y()+5);    // HIGH
+                break;
+            }
+        }
+
+    }
+    else
+    {
+        points[index++].set(rect.x(), rect.y()+rect.height()-5);    // LOW
+
+        while( true )
+        {
+            // rise
+            x  = m_series->points()[i];
+            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
+            points[index++].set(rect.x()+x, rect.y()+5);
+            if( ++i == m_series->count() )
+            {
+                points[index++].set(rect.x()+rect.width(), rect.y()+5);    // HIGH
+                break;
+            }
+
+            // fall
+            x  = m_series->points()[i];
+            points[index++].set(rect.x()+x, rect.y()+5);
+            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
+            if( ++i == m_series->count() )
+            {
+                points[index++].set(rect.x()+rect.width(), rect.y()+rect.height()-5);    // LOW
+                break;
+            }
+        }
+
     }
 
+    qDebug() <<"updatePaintNode Finished";
     return node;
 }
 
@@ -87,6 +145,7 @@ void LogicChannel::setSeries(LogicSeries *series)
 {
     if(m_series != series)
     {
+        qDebug("Set series!");
         m_series = series;
         emit seriesChanged(series);
         update();
