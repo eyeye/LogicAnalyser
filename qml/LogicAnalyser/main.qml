@@ -14,8 +14,8 @@ Rectangle {
 
 
     Rectangle {
-        width: parent.width/2
-        height: parent.height/2
+        width: 400
+        height: 200
         anchors.centerIn: parent
         color: "lightblue"
 
@@ -45,7 +45,7 @@ Rectangle {
             }
 
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
+            width: 500
             height: 60
 
             color: "maroon"
@@ -57,10 +57,10 @@ Rectangle {
                 level: false
             }
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
+            width: 500
             height: 60
 
-            color: "maroon"
+            color: "red"
         }
 
         LogicChannel{
@@ -69,10 +69,10 @@ Rectangle {
             }
 
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
+            width: 500
             height: 60
 
-            color: "maroon"
+            color: "yellow"
         }
         LogicChannel{
             series: LogicSeries{
@@ -80,10 +80,10 @@ Rectangle {
             }
 
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
+            width: 500
             height: 60
 
-            color: "maroon"
+            color: "blue"
         }
         LogicChannel{
             series: LogicSeries{
@@ -91,10 +91,10 @@ Rectangle {
             }
 
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
+            width: 500
             height: 60
 
-            color: "maroon"
+            color: "black"
         }
         LogicChannel{
             series: LogicSeries{
@@ -102,10 +102,10 @@ Rectangle {
             }
 
             anchors.horizontalCenter: parent.horizontalCenter
-            width: parent.width
+            width: 500
             height: 60
 
-            color: "maroon"
+            color: "pink"
         }
     }
 

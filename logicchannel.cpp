@@ -24,7 +24,7 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
         return NULL;
     }
 
-    qDebug() <<"m_series->count: "<< m_series->count();
+//    qDebug() <<"m_series->count: "<< m_series->count();
 
     if(oldNode == NULL)
     {
@@ -50,10 +50,17 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
         geometry->allocate(2*(m_series->count()) + 2);
     }
 
-    QRectF rect = boundingRect();
+    //QRectF rect = boundingRect();
     QSGGeometry::Point2D *points = geometry->vertexDataAsPoint2D();
-    qDebug() <<"index_count: "<< geometry->indexCount();
+//    qDebug() <<"index_count: "<< geometry->indexCount();
 
+
+    float xx = boundingRect().x();
+    float yy = boundingRect().y();
+    float ww = boundingRect().width();
+    float hh = boundingRect().height();
+    float high = yy+5;
+    float low = yy+hh-5;
 
     int index = 0;
     quint32 i = 0;
@@ -62,27 +69,27 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
     if(m_series->level())
     {
         // start
-        points[index++].set(rect.x(), rect.y()+5);    // HIGH
+        points[index++].set(xx, high);    // HIGH
 
         while( true )
         {
             // fall
-            x  = m_series->points()[i];
-            points[index++].set(rect.x()+x, rect.y()+5);
-            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
+            x  = m_series->points()[i] + xx;
+            points[index++].set(x, high);
+            points[index++].set(x, low);
             if( ++i == m_series->count() )
             {
-                points[index++].set(rect.x()+rect.width(), rect.y()+rect.height()-5);    // LOW
+                points[index++].set(ww, low);    // LOW
                 break;
             }
 
             // rise
-            x  = m_series->points()[i];
-            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
-            points[index++].set(rect.x()+x, rect.y()+5);
+            x  = m_series->points()[i] + xx;
+            points[index++].set(x, low);
+            points[index++].set(x, high);
             if( ++i == m_series->count() )
             {
-                points[index++].set(rect.x()+rect.width(), rect.y()+5);    // HIGH
+                points[index++].set(xx+ww, high);    // HIGH
                 break;
             }
         }
@@ -90,34 +97,34 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
     }
     else
     {
-        points[index++].set(rect.x(), rect.y()+rect.height()-5);    // LOW
+        points[index++].set(xx, low);    // LOW
 
         while( true )
         {
             // rise
-            x  = m_series->points()[i];
-            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
-            points[index++].set(rect.x()+x, rect.y()+5);
+            x  = m_series->points()[i] + xx;
+            points[index++].set(x, low);
+            points[index++].set(x, high);
             if( ++i == m_series->count() )
             {
-                points[index++].set(rect.x()+rect.width(), rect.y()+5);    // HIGH
+                points[index++].set(xx+ww, high);    // HIGH
                 break;
             }
 
             // fall
-            x  = m_series->points()[i];
-            points[index++].set(rect.x()+x, rect.y()+5);
-            points[index++].set(rect.x()+x, rect.y()+rect.height()-5);
+            x  = m_series->points()[i] + xx;
+            points[index++].set(x, high);
+            points[index++].set(x, low);
             if( ++i == m_series->count() )
             {
-                points[index++].set(rect.x()+rect.width(), rect.y()+rect.height()-5);    // LOW
+                points[index++].set(xx+ww, low);    // LOW
                 break;
             }
         }
 
     }
 
-    qDebug() <<"updatePaintNode Finished";
+//    qDebug() <<"updatePaintNode Finished";
     return node;
 }
 
