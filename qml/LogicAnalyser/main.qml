@@ -4,8 +4,8 @@ import LogicAnalyer 1.0
 
 Rectangle {
     id: window
-    width: 360
-    height: 360
+    width: 800
+    height: 480
 
 //    LogicSeries
 //    {
@@ -13,99 +13,115 @@ Rectangle {
 //    }
 
 
-    Rectangle {
-        width: 400
-        height: 200
-        anchors.centerIn: parent
-        color: "lightblue"
+//    Rectangle {
+//        width: 400
+//        height: 200
+//        anchors.centerIn: parent
+//        color: "lightblue"
 
-        Text {
-            text: qsTr("Hello World")
-            anchors.centerIn: parent
-        }
-        MouseArea {
-            anchors.fill: parent
-            onClicked: {
-                Qt.quit();
-            }
-        }
-
-
-    }
+//        Text {
+//            text: qsTr("Hello World")
+//            anchors.centerIn: parent
+//        }
+//        MouseArea {
+//            anchors.fill: parent
+//            onClicked: {
+//                Qt.quit();
+//            }
+//        }
 
 
-    Column{
+//    }
+
+
+    Flickable {
+        id: flickable1
+        boundsBehavior: Flickable.DragOverBounds
+        contentWidth: 1600
         anchors.fill: parent
-        spacing: 10
 
-        LogicChannel{
-            id: channel0
-            series: LogicSeries{
-                level: true
+        Column{
+            id: channelList
+            width: 1600
+            height: parent.height
+            clip: true
+            anchors.left: parent.left
+            anchors.leftMargin: 0
+            anchors.top: parent.top
+            anchors.topMargin: 0
+            spacing: 10
+
+            LogicChannel{
+                id: channel0
+                series: LogicSeries{
+                    level: true
+                }
+
+                //            anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                height: 60
+
+                color: "maroon"
             }
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 500
-            height: 60
+            LogicChannel{
+                id: channel1
+                series: LogicSeries{
+                    level: false
+                }
+                //            anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                height: 60
 
-            color: "maroon"
-        }
-
-        LogicChannel{
-            id: channel1
-            series: LogicSeries{
-                level: false
-            }
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 500
-            height: 60
-
-            color: "red"
-        }
-
-        LogicChannel{
-            series: LogicSeries{
-                level: true
+                color: "red"
             }
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 500
-            height: 60
+            LogicChannel{
+                series: LogicSeries{
+                    level: true
+                }
 
-            color: "yellow"
-        }
-        LogicChannel{
-            series: LogicSeries{
-                level: true
+                //            anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                height: 60
+
+                color: "yellow"
+            }
+            LogicChannel{
+                series: LogicSeries{
+                    level: true
+                }
+
+                //            anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                height: 60
+
+                color: "blue"
             }
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 500
-            height: 60
+            LogicChannel{
+                series: LogicSeries{
+                    level: true
+                }
 
-            color: "blue"
-        }
-        LogicChannel{
-            series: LogicSeries{
-                level: true
+                //            anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                height: 60
+
+                color: "black"
             }
 
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 500
-            height: 60
+            LogicChannel{
+                series: LogicSeries{
+                    level: true
+                }
 
-            color: "black"
-        }
-        LogicChannel{
-            series: LogicSeries{
-                level: true
+                //            anchors.horizontalCenter: parent.horizontalCenter
+                width: parent.width
+                height: 60
+
+                color: "pink"
             }
-
-            anchors.horizontalCenter: parent.horizontalCenter
-            width: 500
-            height: 60
-
-            color: "pink"
         }
     }
 

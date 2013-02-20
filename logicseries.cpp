@@ -11,7 +11,7 @@ LogicSeries::LogicSeries(QObject *parent) :
     for(quint32 i = 0; i < m_count; i++)
     {
         sum += i;
-        m_points[i] = 2*i;
+        m_points[i] = 8*i;
     }
 }
 

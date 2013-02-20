@@ -124,7 +124,7 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
 
     }
 
-//    qDebug() <<"updatePaintNode Finished";
+    qDebug() <<"*";
     return node;
 }
 
