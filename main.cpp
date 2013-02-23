@@ -18,6 +18,6 @@ int main(int argc, char *argv[])
     QtQuick2ApplicationViewer viewer;
     viewer.setMainQmlFile(QStringLiteral("qml/LogicAnalyser/main.qml"));
     viewer.showExpanded();
-
+//    QVariant
     return app.exec();
 }

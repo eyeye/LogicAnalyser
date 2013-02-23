@@ -7,32 +7,6 @@ Rectangle {
     width: 800
     height: 480
 
-//    LogicSeries
-//    {
-//        id:series
-//    }
-
-
-//    Rectangle {
-//        width: 400
-//        height: 200
-//        anchors.centerIn: parent
-//        color: "lightblue"
-
-//        Text {
-//            text: qsTr("Hello World")
-//            anchors.centerIn: parent
-//        }
-//        MouseArea {
-//            anchors.fill: parent
-//            onClicked: {
-//                Qt.quit();
-//            }
-//        }
-
-
-//    }
-
 
     Flickable {
         id: flickable1

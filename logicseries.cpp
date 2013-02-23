@@ -4,7 +4,7 @@ LogicSeries::LogicSeries(QObject *parent) :
     QObject(parent), m_level(true), m_count(1024)
 {
     qDebug("Series Init!");
-    m_points = new double[m_count];
+    m_points = new quint64[m_count];
     //m_points = m_pointsData;
     quint32 sum = 0;
 
@@ -25,7 +25,7 @@ bool LogicSeries::level()
     return m_level;
 }
 
-double *LogicSeries::points()
+quint64 *LogicSeries::points()
 {
     return m_points;
 }
@@ -40,14 +40,18 @@ void LogicSeries::setLevel(bool level)
     if(m_level != level)
     {
         m_level = level;
-
     }
 }
 
-void LogicSeries::setPoints(double *points)
+void LogicSeries::setPoints(quint64 *points)
 {
     if(m_points != points)
     {
+        if( m_points != NULL )
+        {
+            delete m_points;
+        }
+
         m_points = points;
     }
 }
