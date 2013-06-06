@@ -16,8 +16,12 @@ int main(int argc, char *argv[])
     qDebug()<<"qmlRegisterType";
 
     QtQuick2ApplicationViewer viewer;
-    viewer.setMainQmlFile(QStringLiteral("qml/LogicAnalyser/main.qml"));
+//    viewer.setMainQmlFile(QStringLiteral("qml/LogicAnalyser/LogicAnalyser.qml"));
+    viewer.setMainQmlFile(QStringLiteral("qml/LogicAnalyser/testQml.qml"));
     viewer.showExpanded();
 //    QVariant
     return app.exec();
 }
+
+
+

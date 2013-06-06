@@ -25,6 +25,7 @@ public:
 signals:
     void colorChanged(const QColor &color);
     void seriesChanged(const LogicSeries *series);
+
 public slots:
 
 
