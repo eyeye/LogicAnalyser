@@ -38,6 +38,11 @@ Rectangle {
             Layout.fillWidth: true
         }
 
+
+        Timescale {
+            id: timescale
+        }
+
         Rectangle {
             id: logicViewRegion
             x: 80
@@ -109,12 +114,11 @@ Rectangle {
         }
 
 
-//        ScrollMap {
-//            id: scrollMap
-//            Layout.fillWidth: true
-
-//            flickView: logicView
-//        }
+        ScrollMap {
+            id: scrollMap
+            Layout.fillWidth: true
+            timescale: timescale
+        }
 
 //        Timeline {
 //            width: 360

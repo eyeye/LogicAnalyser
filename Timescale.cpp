@@ -34,6 +34,8 @@ void Timescale::setPositionRange(qreal positionStart, qreal positionEnd)
     m_pixelRatio = m_pixelViewLength/m_timeViewLength;
 
     emit scaleChanged();
+
+    qDebug() << "scaleChanged:" ;
 }
 
 
