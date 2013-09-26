@@ -5,12 +5,19 @@ import QtQuick.Dialogs 1.0
 
 import LogicAnalyer 1.0
 
+import "test.js" as JSTest
+
 Rectangle {
     width: 800
     height: 480
 
+//    LogicAcquirerSimulator {
+//        id: simulator
+//    }
+
     ColumnLayout {
         id: column_layout1
+        spacing: 1
         anchors.fill: parent
 
         ToolBar {
@@ -24,10 +31,15 @@ Rectangle {
             Layout.fillWidth: true
         }
 
-
+        Timeline {
+            width: 360
+            height: 50
+            Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+            Layout.fillWidth: true
+        }
 
         Rectangle {
-            id: rectangle1
+            id: logicViewRegion
             x: 80
             y: 116
             width: 200
@@ -39,11 +51,15 @@ Rectangle {
 
 
             Flickable {
-                id: flickable1
+                id: logicView
                 x: 234
                 y: 288
+                clip: true
                 width: 300
                 height: 300
+
+                contentWidth:4096
+
                 anchors.fill: parent
                 flickableDirection: Flickable.HorizontalFlick
 
@@ -74,15 +90,18 @@ Rectangle {
 
                     delegate: LogicChannel{
                         id: channel0
-                        series: LogicSeries{
-                            level: true
-                        }
-
-                        //            anchors.horizontalCenter: parent.horizontalCenter
                         width: parent.width
                         height: 60
-
                         color: colorCode
+                    }
+                }
+
+
+                MouseArea {
+                    anchors.fill: parent
+
+                    onWheel: {
+                        console.log("whell");
                     }
                 }
             }
@@ -90,12 +109,27 @@ Rectangle {
         }
 
 
+//        ScrollMap {
+//            id: scrollMap
+//            Layout.fillWidth: true
+
+//            flickView: logicView
+//        }
+
+//        Timeline {
+//            width: 360
+//            height: 50
+//            Layout.alignment: Qt.AlignTop | Qt.AlignLeft
+//            Layout.fillWidth: true
+//        }
+
         StatusBar {
             id: status_bar1
             x: 160
             y: 419
 
             Layout.alignment: Qt.AlignBottom | Qt.AlignLeft
+            Layout.fillWidth: true
         }
 
 

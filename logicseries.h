@@ -19,6 +19,12 @@ public:
     void setPoints(quint64* points);
     void setCount(quint32 count);
 
+    // 方便搜索的功能函数
+//    Q_INVOKABLE quint64 leftPoint(quint64 time);
+//    Q_INVOKABLE quint64 rightPoint(quint64 time);
+//    Q_INVOKABLE quint64 neareatPoint(quint64 time);
+
+
 signals:
 
 
@@ -28,6 +34,10 @@ private:
     bool m_level;
     quint64* m_points;
     quint32 m_count;
+
+    // 记忆当前左右位置，方便快速搜索。
+    quint32 m_leftIndex;
+    quint32 m_rightIndex;
 
     //quint64 m_pointsData[128];
 };

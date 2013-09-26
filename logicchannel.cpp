@@ -4,10 +4,35 @@
 
 
 LogicChannel::LogicChannel(QQuickItem *parent) :
-    QQuickItem(parent), m_color("red"), m_series(NULL)
+    QQuickItem(parent), m_color("red")
 {
     //m_color = QColor("red");
     setFlag(ItemHasContents, true);
+
+    m_nSecPerPixel = 1;
+    m_points = new QVector<quint64>(1024);
+    m_count = 0;
+
+    m_node = new QSGGeometryNode;
+    m_geometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(),
+                                 2*(m_count) );
+
+    m_geometry->setDrawingMode(GL_LINE_STRIP);
+    m_geometry->setLineWidth(4);
+
+    m_node->setGeometry(m_geometry);
+    m_node->setFlag(QSGNode::OwnsGeometry);
+
+    QSGFlatColorMaterial *material = new QSGFlatColorMaterial;
+    material->setColor(m_color);
+    m_node->setMaterial(material);
+    m_node->setFlag(QSGNode::OwnsMaterial);
+
+//    QTimer::singleShot(200, this, SLOT(autoAddPoint()));
+
+    QTimer *timer = new QTimer(this);
+    connect(timer, SIGNAL(timeout()), this, SLOT(autoAddPoint()));
+    timer->start(200);
 }
 
 LogicChannel::~LogicChannel()
@@ -16,44 +41,8 @@ LogicChannel::~LogicChannel()
 
 QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePaintNodeData *)
 {
-    QSGGeometryNode *node = 0;
-    QSGGeometry     *geometry = 0;
-
-    if(m_series == NULL)
-    {
-        return NULL;
-    }
-
-//    qDebug() <<"m_series->count: "<< m_series->count();
-
-    if(oldNode == NULL)
-    {
-        node = new QSGGeometryNode;
-        geometry = new QSGGeometry(QSGGeometry::defaultAttributes_Point2D(),
-                                   2*(m_series->count()) + 2);
-
-        geometry->setDrawingMode(GL_LINE_STRIP);
-        geometry->setLineWidth(4);
-
-        node->setGeometry(geometry);
-        node->setFlag(QSGNode::OwnsGeometry);
-
-        QSGFlatColorMaterial *material = new QSGFlatColorMaterial;
-        material->setColor(m_color);
-        node->setMaterial(material);
-        node->setFlag(QSGNode::OwnsMaterial);
-    }
-    else
-    {
-        node = static_cast<QSGGeometryNode *>(oldNode);
-        geometry = node->geometry();
-        geometry->allocate(2*(m_series->count()) + 2);
-    }
-
-    //QRectF rect = boundingRect();
-    QSGGeometry::Point2D *points = geometry->vertexDataAsPoint2D();
-//    qDebug() <<"index_count: "<< geometry->indexCount();
-
+    m_geometry->allocate(2*m_count);
+    QSGGeometry::Point2D *points = m_geometry->vertexDataAsPoint2D();
 
     float xx = boundingRect().x();
     float yy = boundingRect().y();
@@ -62,101 +51,100 @@ QSGNode *LogicChannel::updatePaintNode(QSGNode * oldNode, QQuickItem::UpdatePain
     float high = yy+5;
     float low = yy+hh-5;
 
-    int index = 0;
-    quint32 i = 0;
     float x;
 
-    if(m_series->level())
+    for(qint32 index = 0; index < m_count; index ++)
     {
-        // start
-        points[index++].set(xx, high);    // HIGH
+        x = ( m_points->at(index) & ~(quint64)((quint64)3<<62) ) + xx;
 
-        while( true )
+        if(m_points->at(index) & (quint64)((quint64)1<<62))
         {
-            // fall
-            x  = m_series->points()[i] + xx;
-            points[index++].set(x, high);
-            points[index++].set(x, low);
-            if( ++i == m_series->count() )
-            {
-                points[index++].set(ww, low);    // LOW
-                break;
-            }
-
-            // rise
-            x  = m_series->points()[i] + xx;
-            points[index++].set(x, low);
-            points[index++].set(x, high);
-            if( ++i == m_series->count() )
-            {
-                points[index++].set(xx+ww, high);    // HIGH
-                break;
-            }
+            points[2*index].set(x, high);
+            points[2*index + 1].set(x, low);
         }
-
-    }
-    else
-    {
-        points[index++].set(xx, low);    // LOW
-
-        while( true )
+        else if(m_points->at(index) & (quint64)((quint64)2<<62))
         {
-            // rise
-            x  = m_series->points()[i] + xx;
-            points[index++].set(x, low);
-            points[index++].set(x, high);
-            if( ++i == m_series->count() )
-            {
-                points[index++].set(xx+ww, high);    // HIGH
-                break;
-            }
-
-            // fall
-            x  = m_series->points()[i] + xx;
-            points[index++].set(x, high);
-            points[index++].set(x, low);
-            if( ++i == m_series->count() )
-            {
-                points[index++].set(xx+ww, low);    // LOW
-                break;
-            }
+            points[2*index].set(x, low);
+            points[2*index + 1].set(x, high);
         }
-
     }
 
-    qDebug() <<"*";
-    return node;
+    return m_node;
 }
+
+
 
 QColor LogicChannel::color() const
 {
     return m_color;
 }
 
+
+
 void LogicChannel::setColor(const QColor &color)
 {
     if(m_color != color)
     {
         m_color = color;
+        QSGFlatColorMaterial *material = dynamic_cast<QSGFlatColorMaterial*>(m_node->material());
+        material->setColor(color);
         emit colorChanged(color);
         update();
     }
 }
 
-LogicSeries *LogicChannel::series() const
+
+qint32 LogicChannel::nSecPerPixel() const
 {
-    return m_series;
+    return this->m_nSecPerPixel;
 }
 
-void LogicChannel::setSeries(LogicSeries *series)
+
+void LogicChannel::setNSecPerPixel(qint32 nSecPerPixel)
 {
-    if(m_series != series)
+    if( nSecPerPixel > 0 )
     {
-        qDebug("Set series!");
-        m_series = series;
-        emit seriesChanged(series);
+        m_nSecPerPixel = nSecPerPixel;
+        emit nSecPerPixelChanged(m_nSecPerPixel);
         update();
     }
 }
+
+
+
+void LogicChannel::autoAddPoint()
+{
+    quint64 point;
+    static quint64 time = 0;
+
+    if( m_count < m_points->count())
+    {
+        if(m_count & 1)
+        {
+            point = time | ((quint64)1<<62);
+        }
+        else
+        {
+            point = time | ((quint64)2<<62);
+        }
+
+        time += 4;
+        (*m_points)[m_count++] = point;
+
+        updatePoints();
+
+        setWidth(point + 200);
+    }
+
+//    qDebug() << "autoAddPoint: " << m_count << point;
+
+}
+
+
+void LogicChannel::updatePoints()
+{
+    this->update();
+}
+
 
 

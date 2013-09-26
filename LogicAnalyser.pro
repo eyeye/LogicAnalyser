@@ -13,13 +13,21 @@ QML_IMPORT_PATH =
 
 # The .cpp file which was generated for your project. Feel free to hack it.
 SOURCES += main.cpp \
-    logicchannel.cpp \
-    logicseries.cpp
+    Timescale.cpp \
+    LogicSeries.cpp \
+    LogicChannel.cpp \
+    LogicAcquirerSimulator.cpp \
+    QuickItemDemo0.cpp \
+    Timeline.cpp
 
 # Please do not modify the following two lines. Required for deployment.
 include(qtquick2applicationviewer/qtquick2applicationviewer.pri)
 qtcAddDeployment()
 
 HEADERS += \
-    logicchannel.h \
-    logicseries.h
+    Timescale.h \
+    LogicSeries.h \
+    LogicChannel.h \
+    LogicAcquirerSimulator.h \
+    QuickItemDemo0.h \
+    Timeline.h
